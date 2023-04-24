@@ -4,6 +4,10 @@ const alunosDB = require('../data/alunos.json');
 
 let alunoLogado = null;
 
+function senhaParaBase64(senha) {
+  return Buffer.from(senha).toString('base64');
+}
+
 router.get('/', function(req, res, next) {
   if (alunoLogado == null) {
     return res.redirect('/login');
@@ -23,7 +27,7 @@ router.post('/login', function(req, res, next) {
     return res.render('login', { error: 'Usuário não cadastrado!' });
   }
 
-  if (aluno.senha !== Buffer.from(req.body.senha).toString('base64')) {
+  if (senhaParaBase64(aluno.senha) !== senhaParaBase64(req.body.senha)) {
     return res.render('login', { error: 'Senha inválida!' });
   }
 
